@@ -1,0 +1,280 @@
+# objek kartu isinya pin, informasi, bank
+
+# objek atm isinya objek kartu, bank, pecahan 50/100
+
+
+class Kartu:
+    def __init__(self, pin, nama, nomorRekening, bank, expired, saldo):
+        self.pin = pin
+        self.nama = nama
+        self.nomorRekening = nomorRekening
+        self.bank = bank
+        self.expired = expired
+        self.saldo = saldo
+
+    def autentikasi(self):
+        print("\n===================================")
+        print("        MASUKKAN PIN ANDA         ")
+        print("===================================")
+        print("\nPIN harus terdiri dari 6 digit angka.")
+    
+        inputPin = input("Masukkan PIN: ")
+        
+        if inputPin == self.pin:
+            print("\nPIN diterima!")
+            return True
+        else:
+            print("\nPIN tidak valid! Silakan coba lagi.")
+            self.autentikasi()
+            return True
+    def gantiPin(self):
+        print("\n===================================")
+        print("        MASUKKAN PIN BARU           ")
+        print("===================================")
+        print("\nPIN harus terdiri dari 6 digit angka.")
+    
+        inputPin = input("Masukkan PIN baru: ")
+        
+        if len(inputPin) != 6:
+            print("\nPIN tidak valid! Silakan coba lagi.")
+            self.gantiPin()
+        elif inputPin == self.pin:
+            print("\nPIN sama dengan pin sekarang")
+            self.gantiPin()
+        else:
+            self.pin = inputPin
+            print("\nPIN berhasil diganti")
+
+class ATM:
+    def __init__(self,bank, pecahan, kartu_obj):
+        self.bank = bank
+        self.pecahan = pecahan
+        self.kartu = kartu_obj
+
+    def selamat_datang(self):
+        print("==================================")
+        print("         SELAMAT DATANG           ")
+        print("       DI MESIN ATM INDONESIA     ")
+        print("==================================")
+        print("")
+        print("   ╔═════════════════════════╗")
+        print("   ║  Apakah ingin           ║")
+        print("   ║  memasukkan kartu? (y/n)║")
+        print("   ╚═════════════════════════╝")
+        print("")
+        
+        pilihan = input("Pilihan Anda: ").lower()
+        if pilihan == "y":
+            if self.kartu.autentikasi() == True:
+                self.main_menu()
+        elif pilihan == "n":
+            print("\nTerima kasih! Sampai jumpa lagi.")
+        else:
+            print("\nMasukan tidak valid, coba lagi.")
+    def menu_transaksi(self):
+        print("\n====================================")
+        print("          PILIH TRANSAKSI          ")
+        print("====================================")
+        print("Untuk membatalkan transaksi, ketik 'CANCEL'")
+        print("")
+        print("1. Setor Tunai")
+        print("2. Penarikan Tunai / Transaksi Lainnya")
+        print("")
+        print("====================================")
+        
+        pilihan = input("Silakan pilih layanan (1/2): ")
+        
+        if pilihan == "1":
+            print("\nAnda memilih Setor Tunai. Silakan masukkan uang ke mesin.")
+        elif pilihan == "2":
+            print("\nAnda memilih Penarikan Tunai / Transaksi Lainnya.")
+            self.pilih_nominal()
+        elif pilihan == "cancel" or pilihan == "CANCEL":
+            print("\nTransaksi dibatalkan. Kembali ke menu utama.")
+            self.selamat_datang()
+        else:
+            print("\nMasukan tidak valid. Silakan coba lagi.")
+
+    def pilih_nominal(self):
+        if self.kartu.saldo <= 0:
+            print("\nAnda tidak memiliki uang. Silahkan kerja dulu.")
+            self.main_menu()
+            return
+        
+        print("\n====================================")
+        print("      SILAKAN MEMILIH JUMLAH      ")
+        print("====================================")
+        print("Untuk membatalkan transaksi, ketik 'CANCEL'")
+        print("")
+        print("1. Rp 100.000")
+        print("2. Rp 500.000")
+        print("3. Rp 1.000.000")
+        print("4. Transaksi Lainnya")
+        print("")
+        print("====================================")
+        
+        pilihan = input("Silakan pilih nominal (1/2/3/4): ")
+        
+        if pilihan == "1":
+            print("\nAnda memilih penarikan Rp 100.000.")
+            self.tampil_saldo(jumlah=100000)
+        elif pilihan == "2":
+            print("\nAnda memilih penarikan Rp 500.000.")
+            self.tampil_saldo(jumlah=500000)
+        elif pilihan == "3":
+            print("\nAnda memilih penarikan Rp 1.000.000.")
+            self.tampil_saldo(jumlah=1000000)
+        elif pilihan == "4":
+            print("\nAnda memilih 'Transaksi Lainnya'. Silakan pilih layanan tambahan.")
+            self.main_menu()
+        elif pilihan == "CANCEL" or pilihan == "cancel":
+            print("\nTransaksi dibatalkan.")
+            self.selamat_datang() 
+        else:
+            print("\nMasukan tidak valid. Silakan coba lagi.")
+            self.pilih_nominal()
+    def main_menu(self):
+        print("\n====================================")
+        print("        PILIH TRANSAKSI LAINNYA     ")
+        print("====================================")
+        print("Untuk membatalkan transaksi, ketik 'CANCEL'")
+        print("1. Informasi") # belum
+        print("2. Penarikan Tunai")
+        print("3. Transfer") #belum
+        print("4. Pembayaran") #belum
+        print("5. Ganti PIN")
+        print("6. Flazz")#belum
+        print("7. Setor Tunai") #belum
+        print("")
+        print("====================================")
+        
+        pilihan = input("Silakan pilih layanan (1/2/3/4/5/6): ")
+        
+        if pilihan == "1":
+            print("\nAnda memilih INFORMASI. Menampilkan informasi rekening...")
+        elif pilihan == "2":
+            print("\nAnda memilih PENARIKAN TUNAI. Silakan pilih jumlah uang.")
+            self.pilih_pecahan() 
+        elif pilihan == "3":
+            print("\nAnda memilih TRANSFER. Silakan masukkan nomor rekening tujuan.")
+        elif pilihan == "4":
+            print("\nAnda memilih PEMBAYARAN. Silakan pilih jenis pembayaran.")
+        elif pilihan == "5":
+            print("\nAnda memilih GANTI PIN. Silakan masukkan PIN baru.")
+            self.kartu.gantiPin()
+            self.selamat_datang()
+        elif pilihan == "6":
+            print("\nAnda memilih FLazz. Silakan pilih fitur kartu Flazz.")
+        elif pilihan == "7":
+            print("\nAnda memilih SETOR TUNAI. Silakan masukkan uang ke mesin.")
+            self.setor_tunai()
+        elif pilihan == "cancel" or pilihan == "CANCEL":
+            print("\nTransaksi dibatalkan. Kembali ke menu utama.")
+            self.selamat_datang()
+        else:
+            print("\nMasukan tidak valid. Silakan coba lagi.")
+            self.main_menu()
+    def pilih_pecahan(self):
+        if self.kartu.saldo <= 0:
+            print("\nAnda tidak memiliki uang. Silahkan kerja dulu.")
+            self.main_menu()
+            return
+        
+        print("\n====================================")
+        print("   SILAKAN MEMILIH PECAHAN UANG    ")
+        print("====================================")
+        print("Untuk membatalkan transaksi, ketik 'CANCEL'")
+        print("")
+        print("1. Rp 50.000")
+        print("2. Rp 100.000")
+        print("")
+        print("====================================")
+        
+        pilihan = input("Silakan pilih pecahan uang (1/2): ").lower()
+        
+        if pilihan == "1":
+            print("\nAnda memilih pecahan Rp 50.000.")
+            self.masukkan_jumlah_uang()
+        elif pilihan == "2":
+            print("\nAnda memilih pecahan Rp 100.000.")
+            self.masukkan_jumlah_uang()
+        elif pilihan == "cancel" or pilihan == "CANCEL":
+            print("\nTransaksi dibatalkan. Kembali ke menu utama.")
+            self.selamat_datang()
+        else:
+            print("\nMasukan tidak valid. Silakan coba lagi.")
+            self.pilih_pecahan() 
+            
+    def masukkan_jumlah_uang(self):
+        print("\n====================================")
+        print("   MASUKKAN JUMLAH UANG YANG DIINGINKAN   ")
+        print("====================================")
+        print("Untuk membatalkan transaksi, tekan 'CANCEL'")
+        print("")
+        
+        jumlah = input("Masukkan jumlah penarikan: ").lower().replace(".", "").strip()
+
+        if jumlah == "cancel" or jumlah == "CANCEL":
+            print("\nTransaksi dibatalkan. Kembali ke menu utama.")
+            self.selamat_datang()
+        elif jumlah.isdigit():
+            jumlah = int(jumlah)
+            if jumlah % 50000 == 0 and jumlah >= 50000:  # Memastikan nominal bulat kelipatan 50.000
+                self.tampil_saldo(jumlah)
+            else:
+                print("\nNominal tidak valid! Masukkan kelipatan Rp 50.000.")
+                self.masukkan_jumlah_uang()  
+        else:
+            print("\nMasukan tidak valid. Silakan coba lagi.")
+            self.masukkan_jumlah_uang()  
+    def tampil_saldo(self, jumlah):
+        print("\n====================================")
+        print(" APAKAH ANDA INGIN TAMPILKAN SALDO?   ")
+        print("====================================")
+        print("")
+        print("1. Tampil Saldo")
+        print("2. Tidak Tampil Saldo")
+        print("")
+        print("====================================")
+        
+        pilihan = input("Silakan pilih (1/2): ")
+        
+        if pilihan == "1":
+            saldo = self.kartu.saldo
+            print("\nMenampilkan saldo...")
+            print("\n====================================") 
+            print(f"Saldo Anda saat ini: Rp {saldo:,}")
+            print("====================================") 
+            print("")
+            print(f"Anda akan menarik Rp {jumlah:,} Silakan ambil uang Anda.")
+            self.kartu.saldo = self.kartu.saldo - jumlah
+            print("Saldo anda sekarang" + str(self.kartu.saldo))
+            self.selesai_transaksi()
+        elif pilihan == "2":
+            print(f"\nAnda akan menarik Rp {jumlah:,} Silakan ambil uang Anda.")
+            self.kartu.saldo = self.kartu.saldo - jumlah
+            self.selesai_transaksi()
+        else:
+            print("\nMasukan tidak valid. Silakan coba lagi.")
+            self.tampil_saldo()
+    def selesai_transaksi(self):
+        print("\n================================================")
+        print("APAKAH ANDA INGIN MELAKUKAN TRANSAKSI LAINNYA?")
+        print("================================================")
+        print("")
+        print("1. Ya")
+        print("2. Tidak")
+        print("")
+        print("================================================")
+        pilihan = input ("Silakan pilih (1/2): ")
+        if pilihan == "1":
+            self.menu_transaksi()
+        elif pilihan == "2":
+            print("\nTransaksi Selesai. Terima kasih telah menggunakan layanan kami.")
+
+
+#objek atm
+kartu1 = Kartu("123456", "John Doe", "1234567890", "BCA", "12/25", 0)  
+atm1 = ATM("BCA", 50000, kartu1)
+kartu2 = Kartu("888888", "Agus", "1233567890", "BRI", "12/25", 1000000)
+atm1.selamat_datang()
