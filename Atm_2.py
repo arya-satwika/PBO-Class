@@ -1,17 +1,6 @@
 # objek kartu isinya pin, informasi, bank
 
 # objek atm isinya objek kartu, bank, pecahan 50/100
-import openpyxl
-from openpyxl import Workbook, load_workbook
-
-import tkinter as tk
-from tkinter import messagebox
-# wb = load_workbook("data.xlsx")
-# ws = wb.active
-# ws.title = "Data"
-# ws['A1'] 
-
-# Workbook.save("file.xlsx")
 
 class Kartu:
     def __init__(self, nomorRekening, bank, saldo):
