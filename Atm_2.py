@@ -4,6 +4,8 @@
 import openpyxl
 from openpyxl import Workbook, load_workbook
 
+import tkinter as tk
+from tkinter import messagebox
 # wb = load_workbook("data.xlsx")
 # ws = wb.active
 # ws.title = "Data"
@@ -207,6 +209,18 @@ class ATM:
         self.bank = bank
         self.pecahan = pecahan
         self.kartu = kartu_obj
+
+    def searchKartu(self): #cari kartu yang ada di txt
+        file = open("kartu.txt", "r")
+        list_kartu = []
+        dummyIndex = 0
+
+        for line in file:
+            datas = line.strip().split()
+            kartu = KartuATM(datas[0], datas[1], int(datas[2]), datas[3], int(datas[4]), datas[5])
+            list_kartu.append(kartu)
+            
+       
 
     def tampilkan_pesan(self):
         print("==================================")
@@ -426,7 +440,30 @@ class ATM:
         pilihan = input("Jumlah uang: ")    
         self.kartu.saldo += int(pilihan)
 #objek atm
-kartu1 = KartuATM("1234567890", "BCA",  2000000, "12/25" ,"123456", "Jon Doaa")  
-atm1 = ATM("BCA", 50000 or 100000, kartu1)
-kartu2 = Kartu("888888", "John dick", "1233567890", "BRI", "12/25", 1000000,)
-atm1.tampilkan_pesan()
+
+# class GUIatm(ATM):
+#     def __init__(self, atm):
+#         self.atm = atm
+#         self.window = tk.Tk()
+#         self.window.title("ATM Machine")
+
+#         self.label = tk.Label(self.window, text="Selamat Datang di ATM!")
+#         self.label.pack()
+
+#         self.pin_label = tk.Label(self.window, text="Masukkan PIN:")
+#         self.pin_label.pack()
+#         self.pin_entry = tk.Entry(self.window, show="*")
+#         self.pin_entry.pack()
+
+#         self.login_button = tk.Button(self.window, text="Login", command=self.login)
+#         self.login_button.pack()
+
+#         self.result_label = tk.Label(self.window, text="")
+#         self.result_label.pack()
+
+
+# kartu1 = KartuATM("1234567890", "BCA",  2000000, "12/25" ,"123456", "Jon Doaa")  
+
+atm1 = ATM("BCA", 50000 or 100000, list_kartu[0])
+
+atm1.main_menu()
