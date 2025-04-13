@@ -4,9 +4,12 @@
 import openpyxl
 from openpyxl import Workbook, load_workbook
 
-sheet = Workbook()
-ws = sheet.active
-ws.title = "Data"
+# wb = load_workbook("data.xlsx")
+# ws = wb.active
+# ws.title = "Data"
+# ws['A1'] 
+
+# Workbook.save("file.xlsx")
 
 class Kartu:
     def __init__(self, nomorRekening, bank, saldo):
@@ -198,6 +201,7 @@ class Kartu:
                 print("\nNomor rekening tujuan tidak ditemukan. Silakan coba lagi.")
         else:
             print("\nMasukan tidak valid. Silakan coba lagi.")
+
 class ATM:
     def __init__(self,bank, pecahan, kartu_obj):
         self.bank = bank
@@ -219,7 +223,7 @@ class ATM:
         pilihan = input("Pilihan Anda: ").lower()
         if pilihan == "y":
             if self.kartu.autentikasi() == True:
-                self.transaksi_lainnya()
+                self.main_menu()
         elif pilihan == "n":
             print("\nTerima kasih! Sampai jumpa lagi.")
         else:
@@ -227,7 +231,7 @@ class ATM:
     def pilih_nominal(self):
         if self.kartu.saldo <= 0:
             print("\nAnda tidak memiliki uang. Silahkan kerja dulu.")
-            self.transaksi_lainnya()
+            self.main_menu()
             return
         
         print("\n====================================")
@@ -255,14 +259,14 @@ class ATM:
             self.tampil_saldo(jumlah=1000000)
         elif pilihan == "4":
             print("\nAnda memilih 'Transaksi Lainnya'. Silakan pilih layanan tambahan.")
-            self.transaksi_lainnya()
+            self.main_menu()
         elif pilihan == "CANCEL" or pilihan == "cancel":
             print("\nTransaksi dibatalkan.")
             self.tampilkan_pesan() 
         else:
             print("\nMasukan tidak valid. Silakan coba lagi.")
             self.pilih_nominal()
-    def transaksi_lainnya(self):
+    def main_menu(self):
         print("\n====================================")
         print("        PILIH TRANSAKSI LAINNYA     ")
         print("====================================")
@@ -273,7 +277,7 @@ class ATM:
         print("4. Pembayaran") #belum
         print("5. Ganti PIN")
         print("6. Flazz")#belum
-        print("7. Setor Tunai") #belum
+        print("7. Setor Tunai") 
         print("")
         print("====================================")
         
@@ -282,14 +286,14 @@ class ATM:
         if pilihan == "1":
             print("\nAnda memilih INFORMASI. Menampilkan informasi rekening...")
             self.kartu.informasi()
-            self.transaksi_lainnya() 
+            self.main_menu() 
         elif pilihan == "2":
             print("\nAnda memilih PENARIKAN TUNAI. Silakan pilih jumlah uang.")
             self.pilih_pecahan() 
         elif pilihan == "3":
             print("\nAnda memilih TRANSFER. Silakan masukkan nomor rekening tujuan.")
             self.kartu.transfer()
-            self .transaksi_lainnya()
+            self .main_menu()
         elif pilihan == "4":
             print("\nAnda memilih PEMBAYARAN. Silakan pilih jenis pembayaran.")
         elif pilihan == "5":
@@ -299,7 +303,7 @@ class ATM:
         elif pilihan == "6":
             print("\nAnda memilih FLazz. Silakan pilih fitur kartu Flazz.")
             self.kartu.flazz()
-            self.transaksi_lainnya()
+            self.main_menu()
         elif pilihan == "7":
             print("\nAnda memilih SETOR TUNAI. Silakan masukkan uang ke mesin.")
             self.setor_tunai()
@@ -308,12 +312,12 @@ class ATM:
             self.tampilkan_pesan()
         else:
             print("\nMasukan tidak valid. Silakan coba lagi.")
-            self.transaksi_lainnya()
+            self.main_menu()
 
     def pilih_pecahan(self):
         if self.kartu.saldo <= 0:
             print("\nAnda tidak memiliki uang. Silahkan kerja dulu.")
-            self.transaksi_lainnya()
+            self.main_menu()
             return
         
         print("\n====================================")
@@ -350,7 +354,7 @@ class ATM:
         
         jumlah = input("Masukkan jumlah penarikan: ").lower().replace(".", "").strip()
 
-        if jumlah == "cancel" or jumlah == "CANCEL":
+        if jumlah == "CANCEL":
             print("\nTransaksi dibatalkan. Kembali ke menu utama.")
             self.tampilkan_pesan()
         elif jumlah.isdigit():
@@ -362,8 +366,14 @@ class ATM:
                 self.masukkan_jumlah_uang()  
         else:
             print("\nMasukan tidak valid. Silakan coba lagi.")
-            self.masukkan_jumlah_uang()  
+            self.masukkan_jumlah_uang()
+
     def tampil_saldo(self, jumlah):
+        if saldo <= 0 or jumlah < saldo:
+            print("\nAnda tidak memiliki uang. Silahkan kerja dulu.")
+            self.main_menu()
+            return
+
         print("\n====================================")
         print(" APAKAH ANDA INGIN MAMPILKAN SALDO?   ")
         print("====================================")
@@ -404,7 +414,7 @@ class ATM:
         print("================================================")
         pilihan = input ("Silakan pilih (1/2): ")
         if pilihan == "1":
-            self.transaksi_lainnya()
+            self.main_menu()
         elif pilihan == "2":
             print("\nTransaksi Selesai. Terima kasih telah menggunakan layanan kami.")
     def setor_tunai(self):
@@ -412,12 +422,11 @@ class ATM:
         print("         SETOR TUNAI                 ")
         print("====================================")
         print("masukkan jumlah uang yang ingin di setor")
-    
+        
         pilihan = input("Jumlah uang: ")    
         self.kartu.saldo += int(pilihan)
-        print(self.kartu.saldo)
 #objek atm
-kartu1 = Kartu("123456", "John Doe", "1234567890", "BCA", "12/25", 2000000,)  
+kartu1 = KartuATM("1234567890", "BCA",  2000000, "12/25" ,"123456", "Jon Doaa")  
 atm1 = ATM("BCA", 50000 or 100000, kartu1)
 kartu2 = Kartu("888888", "John dick", "1233567890", "BRI", "12/25", 1000000,)
 atm1.tampilkan_pesan()
