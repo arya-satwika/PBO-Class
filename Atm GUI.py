@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-
+#adadadadad
 class Kartu:
     def __init__(self, pin, nama, nomorRekening, bank, expired, saldo=0):
         self.pin = pin
