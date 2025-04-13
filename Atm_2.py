@@ -99,138 +99,49 @@ class Flazz(Kartu):
     def __init__(self, nomorRekening, bank, saldo):
         super().__init__(nomorRekening, bank, saldo)
         
-class Kartu:
-    def __init__(self, pin, nama, nomorRekening, bank, expired, saldo,):
-        self.pin = pin
-        self.nama = nama
-        self.nomorRekening = nomorRekening
-        self.bank = bank
-        self.expired = expired
-        self.saldo = saldo
-        self.database_rekening = {
-            "1234567890": 500000,  # Rekening tujuan pertama
-            "1233567890": 1000000,  # Rekening tujuan kedua
-        }
-
-    def autentikasi(self):
-        print("\n===================================")
-        print("        MASUKKAN PIN ANDA         ")
-        print("===================================")
-        print("\nPIN harus terdiri dari 6 digit angka.")
-    
-        inputPin = input("Masukkan PIN: ")
-        
-        if inputPin == self.pin:
-            print("\nPIN diterima!")
-            return True
-        else:
-            print("\nPIN tidak valid! Silakan coba lagi.")
-            self.autentikasi()
-            return True
-    def gantiPin(self):
-        print("\n===================================")
-        print("        MASUKKAN PIN BARU           ")
-        print("===================================")
-        print("\nPIN harus terdiri dari 6 digit angka.")
-    
-        inputPin = input("Masukkan PIN baru: ")
-        
-        if len(inputPin) != 6:
-            print("\nPIN tidak valid! Silakan coba lagi.")
-            self.gantiPin()
-        elif inputPin == self.pin:
-            print("\nPIN sama dengan pin sekarang")
-            self.gantiPin()
-        else:
-            self.pin = inputPin
-            print("\nPIN berhasil diganti")   
-    def informasi(self):
-        print("\n====================================")
-        print("         INFORMASI REKENING          ")
-        print("====================================")
-        print ("")
-        print("Untuk kembali ke menu utama, ketik 'BACK'")
-        print("No. Rekening: ", self.nomorRekening)
-        print("Nama Pemilik: ", self.nama)
-        print("Bank: ", self.bank)
-        print("Expired: ", self.expired)
-        print("Saldo: Rp.",self.saldo)
-        print("")
-        print("====================================")
-        
-        pilihan = input("Silakan ketik (BACK): ")
-        
-        if pilihan == "back" or pilihan == "BACK":
-            print("\nKembali ke menu utama.")
-        else:
-            print("\nMasukan tidak valid. Silakan coba lagi.")
-    def transfer (self):
-        print("\n====================================")
-        print("         TRANSFER UANG              ")
-        print("====================================")
-        print("Untuk membatalkan transaksi, ketik 'CANCEL'")
-        print(f"Saldo Anda saat ini: Rp {self.saldo:,}")
-        print("")
-
-        nomorRekening = input("Masukkan nomor rekening tujuan: ")
-        if nomorRekening == self.nomorRekening:
-            print("\nAnda tidak dapat melakukan transfer ke rekening Anda sendiri.")
-            return
-        jumlah = input("Masukkan jumlah uang: ")
-        if jumlah.isdigit():
-            jumlah = int(jumlah)
-
-            if jumlah > self.saldo:
-                print("\nSaldo tidak mencukupi untuk transfer.")
-                return
-            elif nomorRekening in self.database_rekening:
-                self.saldo -= jumlah  # Saldo pengirim berkurang
-                self.database_rekening[nomorRekening] += jumlah  # Saldo penerima bertambah
-                print(f"\nTransfer Rp {jumlah:,} ke rekening {nomorRekening} berhasil!")
-                print(f"Sisa saldo Anda: Rp {self.saldo:,}")
-            else:
-                print("\nNomor rekening tujuan tidak ditemukan. Silakan coba lagi.")
-        else:
-            print("\nMasukan tidak valid. Silakan coba lagi.")
 
 class ATM:
-    def __init__(self,bank, pecahan, kartu_obj):
+    def __init__(self,bank, pecahan):
         self.bank = bank
         self.pecahan = pecahan
-        self.kartu = kartu_obj
+        # self.kartu = kartu_obj
 
-    def searchKartu(self): #cari kartu yang ada di txt
+    # def searchKartu(self): #cari kartu yang ada di txt
+        
+       
+
+    def tampilkan_kartu(self):
         file = open("kartu.txt", "r")
         list_kartu = []
         dummyIndex = 0
+        for line in file: #scan file
+            datas = line.strip().split()#di pisah line nya per spasi
 
-        for line in file:
-            datas = line.strip().split()
-            kartu = KartuATM(datas[0], datas[1], int(datas[2]), datas[3], int(datas[4]), datas[5])
-            list_kartu.append(kartu)
-            
-       
-
-    def tampilkan_pesan(self):
+            #bikin objek baru pake data di txt
+            kartu = KartuATM(datas[0], datas[1], int(datas[2]), datas[3], int(datas[4]), datas[5]) 
+            list_kartu.append(kartu)#masukkin objek kartu ke list
         print("==================================")
         print("         SELAMAT DATANG           ")
         print("       DI MESIN ATM INDONESIA     ")
         print("==================================")
         print("")
         print("   ╔═════════════════════════╗")
-        print("   ║  Apakah ingin           ║")
-        print("   ║  memasukkan kartu? (y/n)║")
+        print("   ║  pilih kartu            ║")
         print("   ╚═════════════════════════╝")
         print("")
         
-        pilihan = input("Pilihan Anda: ").lower()
-        if pilihan == "y":
-            if self.kartu.autentikasi() == True:
-                self.main_menu()
-        elif pilihan == "n":
+        i = 0
+        for kartu in (list_kartu):
+            print(i+1,".", kartu.nama, "nomor rekening:", kartu.nomorRekening, "bank:", kartu.bank)
+            i = i+1
+        print("'x' untuk exit" )
+        pilihan = input("Pilihan Anda: ")
+        if pilihan == "x":
             print("\nTerima kasih! Sampai jumpa lagi.")
         else:
-            print("\nMasukan tidak valid, coba lagi.")
+            self.kartu = list_kartu[int(pilihan)-1]
+            self.main_menu()
+
     def pilih_nominal(self):
         if self.kartu.saldo <= 0:
             print("\nAnda tidak memiliki uang. Silahkan kerja dulu.")
@@ -453,6 +364,6 @@ class ATM:
 
 # kartu1 = KartuATM("1234567890", "BCA",  2000000, "12/25" ,"123456", "Jon Doaa")  
 
-atm1 = ATM("BCA", 50000 or 100000, list_kartu[0])
+atm1 = ATM("BCA", 50000 or 100000)
 
-atm1.main_menu()
+atm1.tampilkan_kartu()
