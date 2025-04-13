@@ -2,11 +2,15 @@
 
 # objek atm isinya objek kartu, bank, pecahan 50/100
 
+import tkinter as tk
+from tkinter import messagebox
+
+
 class Kartu:
     def __init__(self, nomorRekening, bank, saldo):
         self.nomorRekening = nomorRekening
         self.bank = bank
-        self.saldo = saldo
+        self.saldo = int(saldo)
     
 class KartuATM(Kartu):
     def __init__(self, nomorRekening, bank,  saldo, expired, pin, nama):
@@ -266,9 +270,9 @@ class ATM:
         print("Untuk membatalkan transaksi, tekan 'CANCEL'")
         print("")
         
-        jumlah = input("Masukkan jumlah penarikan: ").lower().replace(".", "").strip()
+        jumlah = input("Masukkan jumlah penarikan: ").replace(".", "").strip()
 
-        if jumlah == "CANCEL":
+        if jumlah == "cancel":
             print("\nTransaksi dibatalkan. Kembali ke menu utama.")
             self.tampilkan_pesan()
         elif jumlah.isdigit():
@@ -283,7 +287,7 @@ class ATM:
             self.masukkan_jumlah_uang()
 
     def tampil_saldo(self, jumlah):
-        if saldo <= 0 or jumlah < saldo:
+        if self.kartu.saldo <= 0 or jumlah > self.kartu.saldo:
             print("\nAnda tidak memiliki uang. Silahkan kerja dulu.")
             self.main_menu()
             return
