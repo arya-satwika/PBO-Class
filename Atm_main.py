@@ -409,6 +409,17 @@ class ATM:
 
 
 # kartu1 = KartuATM("1234567890", "BCA",  2000000, "12/25" ,"123456", "Jon Doaa")  
+list_kartu_atm = [
+    KartuATM("1234567890", "BCA",  2000000, "12/25" ,"123456", "Jon_Doaa"),
+    KartuATM("1235645390", "BCA", 2000000, "12/25", "133556", "Jon_Doss"),
+    KartuATM("1213564530", "BCA", 2000000, "12/25", "133556", "Kukki_Doss")
+]
+
+list_flazz_obj = [
+    Flazz("1090923223", "Flazz", 50000),
+    Flazz("2240923353", "Flazz", 100000),
+    Flazz("2444092753", "Flazz", 150000)
+]
 
 atm1 = ATM("BCA", 50000 or 100000)
 
