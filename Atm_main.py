@@ -159,7 +159,6 @@ class ATM:
         print("4. Transaksi Lainnya")
         print("")
         print("====================================")
-        
         pilihan = input("Silakan pilih nominal (1/2/3/4): ")
         
         if pilihan == "1":
@@ -210,6 +209,7 @@ class ATM:
             self .main_menu()
         elif pilihan == "4":
             print("\nAnda memilih PEMBAYARAN. Silakan pilih jenis pembayaran.")
+            self.pembayaran()
         elif pilihan == "5":
             print("\nAnda memilih GANTI PIN. Silakan masukkan PIN baru.")
             self.kartu.gantiPin()
@@ -339,6 +339,48 @@ class ATM:
         
         pilihan = input("Jumlah uang: ")    
         self.kartu.saldo += int(pilihan)
+    def pembayaran(self):
+        print("\n====================================")
+        print("         PEMBAYARAN TAGIHAN        ")
+        print("1. Listrik                          ")
+        print("2. Kredit                           ")
+        print("3. Air                              ")
+        print("4. Paylater                         ")
+        print("====================================")
+    
+        pilihan = input("Silakan pilih (1/2/3/4): ")
+        
+    
+        if pilihan == '1':
+            jenis_tagihan = "listrik"
+        elif pilihan == '2':
+            jenis_tagihan = "kredit"
+        elif pilihan == '3':
+            jenis_tagihan = "air"
+        elif pilihan == '4':
+            jenis_tagihan = "paylater"
+        else:
+            print("\nMasukan tidak valid. Silakan coba lagi.")
+            self.pembayaran() 
+            return 
+        
+        jumlah_tagihan = input("Jumlah tagihan: ")
+        
+        if not jumlah_tagihan.isdigit():
+            print("\nMasukan tidak valid. Silakan coba lagi.")
+            self.pembayaran()  
+            return
+    
+        jumlah_tagihan = int(jumlah_tagihan)
+
+        if jumlah_tagihan > self.kartu.saldo:
+            print("\nSaldo tidak mencukupi untuk melakukan pembayaran.")
+            self.main_menu() 
+        else:
+            self.kartu.saldo -= jumlah_tagihan
+            print(f"\nPembayaran tagihan {jenis_tagihan} sebesar Rp {jumlah_tagihan:,} berhasil!")
+            print(f"Sisa saldo Anda: Rp {self.kartu.saldo:,}")
+            self.selesai_transaksi()  
 #objek atm
 
 # class GUIatm(ATM):
