@@ -82,29 +82,36 @@ class KartuATM(Kartu):
         print(f"Saldo Anda saat ini: Rp {self.saldo:,}")
         print("")
 
-        nomorRekening = input("Masukkan nomor rekening tujuan: ")
-        if nomorRekening == self.nomorRekening:
+        dummyIndex = 1
+        for kartu in list_kartu_atm:
+            print(dummyIndex,". Nomor: ", kartu.nomorRekening, "Bank: ", kartu.bank, "Saldo: ", kartu.saldo)
+            dummyIndex = dummyIndex + 1
+        selected = input("Masukan nomor kartu tujuan: ")
+        self.Kartu = list_kartu_atm[int(selected)-1]
+        if self.Kartu == self:
             print("\nAnda tidak dapat melakukan transfer ke rekening Anda sendiri.")
             return
-        jumlah = input("Masukkan jumlah uang: ")
+        jumlah_transfer = input("Masukkan jumlah transfer: ").strip()
+        if jumlah_transfer.lower() == "cancel":
+            print("\nTransaksi dibatalkan. Kembali ke menu utama.")
+            self.main_menu()
+            return
         
-        if jumlah.isdigit():
-            jumlah = int(jumlah)
-
-            if jumlah > self.saldo:
-                print("\nSaldo tidak mencukupi untuk transfer.")
-                return
-            elif nomorRekening in self.database_rekening:
-                for scan in list_kartu_atm:
-                    if nomorRekening == scan.nomorRekening:
-                        scan.saldo+=jumlah
-                        self.saldo-=jumlah
-                print(f"\nTransfer Rp {jumlah:,} ke rekening {nomorRekening} berhasil!")
-                print(f"Sisa saldo Anda: Rp {self.saldo:,}")
-            else:
-                print("\nNomor rekening tujuan tidak ditemukan. Silakan coba lagi.")
-        else:
+        if not jumlah_transfer.isdigit():
             print("\nMasukan tidak valid. Silakan coba lagi.")
+            self.transfer()
+            return
+        
+        jumlah_transfer = int(jumlah_transfer)
+        
+        if self.saldo < jumlah_transfer:
+            print("\nTransfer gagal! Saldo Anda tidak mencukupi, Silahkan Liat Saldo Anda Lagi.")
+            self.transfer()
+        else:
+            self.saldo = self.saldo - jumlah_transfer
+            self.Kartu.saldo = self.Kartu.saldo + jumlah_transfer
+            print(f"\nTransfer Rp {jumlah_transfer:,} berhasil!")
+            print(f"Sisa saldo Anda: Rp {self.saldo:,}")
 
 class Flazz(Kartu):
     def __init__(self, nomorRekening, bank, saldo):
