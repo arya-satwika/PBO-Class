@@ -108,11 +108,7 @@ class ATM:
     def __init__(self,bank, pecahan):
         self.bank = bank
         self.pecahan = pecahan
-        # self.kartu = kartu_obj
-
-    # def searchKartu(self): #cari kartu yang ada di txt
         
-       
 
     def tampilkan_kartu(self):
         file = open("kartu.txt", "r")
@@ -135,7 +131,7 @@ class ATM:
         print("")
         
         i = 0
-        for kartu in (list_kartu):
+        for kartu in (list_kartu_atm):
             print(i+1,".", kartu.nama, "nomor rekening:", kartu.nomorRekening, "bank:", kartu.bank)
             i = i+1
         print("'x' untuk exit" )
@@ -143,7 +139,8 @@ class ATM:
         if pilihan == "x":
             print("\nTerima kasih! Sampai jumpa lagi.")
         else:
-            self.kartu = list_kartu[int(pilihan)-1]
+            self.kartu = list_kartu_atm[int(pilihan)-1]
+            self.kartu.autentikasi()
             self.main_menu()
 
     def pilih_nominal(self):
@@ -227,7 +224,7 @@ class ATM:
             self.setor_tunai()
         elif pilihan == "cancel" or pilihan == "CANCEL":
             print("\nTransaksi dibatalkan. Kembali ke menu utama.")
-            self.tampilkan_pesan()
+            self.tampilkan_kartu()
         else:
             print("\nMasukan tidak valid. Silakan coba lagi.")
             self.main_menu()
@@ -410,9 +407,9 @@ class ATM:
 
 # kartu1 = KartuATM("1234567890", "BCA",  2000000, "12/25" ,"123456", "Jon Doaa")  
 list_kartu_atm = [
-    KartuATM("1234567890", "BCA",  2000000, "12/25" ,"123456", "Jon_Doaa"),
-    KartuATM("1235645390", "BCA", 2000000, "12/25", "133556", "Jon_Doss"),
-    KartuATM("1213564530", "BCA", 2000000, "12/25", "133556", "Kukki_Doss")
+    KartuATM("1234567890", "BCA",  2000000, "12/25" ,"123456", "PUnn_Doaa"),
+    KartuATM("1235645390", "BCA", 2000000, "12/25", "808080", "Jon_Doss"),
+    KartuATM("1213564530", "BCA", 2000000, "12/25", "232323", "Kukki_Doss")
 ]
 
 list_flazz_obj = [
@@ -421,6 +418,6 @@ list_flazz_obj = [
     Flazz("2444092753", "Flazz", 150000)
 ]
 
-atm1 = ATM("BCA", 50000 or 100000)
+atm1 = ATM("BCA", 100000)
 
 atm1.tampilkan_kartu()
