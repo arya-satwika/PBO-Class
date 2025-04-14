@@ -257,7 +257,7 @@ class ATM:
             self.tampilkan_pesan()
         elif pilihan == "6":
             print("\nAnda memilih FLazz. Silakan pilih fitur kartu Flazz.")
-            self.top_up_flazz()
+            self.list_flazz()
             self.menu_atm()
         elif pilihan == "7":
             print("\nAnda memilih SETOR TUNAI. Silakan masukkan uang ke mesin.")
