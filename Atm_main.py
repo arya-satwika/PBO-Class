@@ -125,7 +125,7 @@ class KartuATM(Kartu):
         print("")
         print("====================================")
         
-        pilihan = input("Silakan pilih layanan (1/2/3/4/5/6): ")
+        pilihan = input("Silakan pilih layanan (1/2/3/4/5/6/7): ")
         return pilihan
         
 
@@ -160,7 +160,7 @@ class Flazz(Kartu):
         print("")
         print("====================================")
         
-        pilihan = input("Silakan pilih layanan (1/2/3/4/5/6): ")
+        pilihan = input("Silakan pilih layanan (1/2): ")
         return pilihan
 
 class ATM:
