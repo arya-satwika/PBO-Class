@@ -2,8 +2,6 @@
 
 # objek atm isinya objek kartu, bank, pecahan 50/100
 
-import tkinter as tk
-from tkinter import messagebox
 
 from abc import ABC, abstractmethod
 
@@ -94,7 +92,7 @@ class KartuATM(Kartu):
         jumlah_transfer = input("Masukkan jumlah transfer: ").strip()
         if jumlah_transfer.lower() == "cancel":
             print("\nTransaksi dibatalkan. Kembali ke menu utama.")
-            self.main_menu()
+            self.menu_atm()
             return
         
         if not jumlah_transfer.isdigit():
@@ -112,6 +110,24 @@ class KartuATM(Kartu):
             self.Kartu.saldo = self.Kartu.saldo + jumlah_transfer
             print(f"\nTransfer Rp {jumlah_transfer:,} berhasil!")
             print(f"Sisa saldo Anda: Rp {self.saldo:,}")
+    def main_menu(self):
+        print("\n====================================")
+        print("        PILIH TRANSAKSI LAINNYA     ")
+        print("====================================")
+        print("Untuk membatalkan transaksi, ketik 'CANCEL'")
+        print("1. Informasi") 
+        print("2. Penarikan Tunai")
+        print("3. Transfer") 
+        print("4. Pembayaran") 
+        print("5. Ganti PIN")
+        print("6. Flazz")
+        print("7. Setor Tunai")
+        print("")
+        print("====================================")
+        
+        pilihan = input("Silakan pilih layanan (1/2/3/4/5/6): ")
+        return pilihan
+        
 
 class Flazz(Kartu):
     def __init__(self, nomorRekening, bank, saldo):
@@ -134,11 +150,24 @@ class Flazz(Kartu):
             print("\nKembali ke menu utama.")
         else:
             print("\nMasukan tidak valid. Silakan coba lagi.")
+    def main_menu(self):
+        print("\n====================================")
+        print("        PILIH TRANSAKSI LAINNYA     ")
+        print("====================================")
+        print("Untuk membatalkan transaksi, ketik 'CANCEL'")
+        print("1. Informasi") 
+        print("2. Top Up")
+        print("")
+        print("====================================")
         
+        pilihan = input("Silakan pilih layanan (1/2/3/4/5/6): ")
+        return pilihan
+
 class ATM:
     def __init__(self,bank, pecahan):
         self.bank = bank
         self.pecahan = pecahan
+        
         
 
     def tampilkan_kartu(self):
@@ -163,12 +192,12 @@ class ATM:
         else:
             self.kartu = list_kartu_atm[int(pilihan)-1]
             self.kartu.autentikasi()
-            self.main_menu()
+            self.menu_atm()
 
     def pilih_nominal(self):
         if self.kartu.saldo <= 0:
             print("\nAnda tidak memiliki uang. Silahkan kerja dulu.")
-            self.main_menu()
+            self.menu_atm()
             return
         
         print("\n====================================")
@@ -195,41 +224,30 @@ class ATM:
             self.tampil_saldo(jumlah=1000000)
         elif pilihan == "4":
             print("\nAnda memilih 'Transaksi Lainnya'. Silakan pilih layanan tambahan.")
-            self.main_menu()
+            self.menu_atm()
         elif pilihan == "CANCEL" or pilihan == "cancel":
             print("\nTransaksi dibatalkan.")
             self.tampilkan_pesan() 
         else:
             print("\nMasukan tidak valid. Silakan coba lagi.")
             self.pilih_nominal()
-    def main_menu(self):
-        print("\n====================================")
-        print("        PILIH TRANSAKSI LAINNYA     ")
-        print("====================================")
-        print("Untuk membatalkan transaksi, ketik 'CANCEL'")
-        print("1. Informasi") 
-        print("2. Penarikan Tunai")
-        print("3. Transfer") 
-        print("4. Pembayaran") #belum
-        print("5. Ganti PIN")
-        print("6. Flazz")#belum
-        print("7. Setor Tunai") 
-        print("")
-        print("====================================")
-        
-        pilihan = input("Silakan pilih layanan (1/2/3/4/5/6): ")
+    def menu_kartu(self, kartu):
+        choice = kartu.main_menu()
+        return choice 
+    def menu_atm(self):
+        pilihan = self.menu_kartu(self.kartu)
         
         if pilihan == "1":
             print("\nAnda memilih INFORMASI. Menampilkan informasi rekening...")
             self.kartu.informasi()
-            self.main_menu() 
+            self.menu_atm() 
         elif pilihan == "2":
             print("\nAnda memilih PENARIKAN TUNAI. Silakan pilih jumlah uang.")
             self.pilih_pecahan() 
         elif pilihan == "3":
             print("\nAnda memilih TRANSFER. Silakan masukkan nomor rekening tujuan.")
             self.kartu.transfer()
-            self .main_menu()
+            self .menu_atm()
         elif pilihan == "4":
             print("\nAnda memilih PEMBAYARAN. Silakan pilih jenis pembayaran.")
             self.pembayaran()
@@ -240,7 +258,7 @@ class ATM:
         elif pilihan == "6":
             print("\nAnda memilih FLazz. Silakan pilih fitur kartu Flazz.")
             self.top_up_flazz()
-            self.main_menu()
+            self.menu_atm()
         elif pilihan == "7":
             print("\nAnda memilih SETOR TUNAI. Silakan masukkan uang ke mesin.")
             self.setor_tunai()
@@ -249,12 +267,12 @@ class ATM:
             self.tampilkan_kartu()
         else:
             print("\nMasukan tidak valid. Silakan coba lagi.")
-            self.main_menu()
+            self.menu_atm()
 
     def pilih_pecahan(self):
         if self.kartu.saldo <= 0:
             print("\nAnda tidak memiliki uang. Silahkan kerja dulu.")
-            self.main_menu()
+            self.menu_atm()
             return
         
         print("\n====================================")
@@ -308,7 +326,7 @@ class ATM:
     def tampil_saldo(self, jumlah):
         if self.kartu.saldo <= 0 or jumlah > self.kartu.saldo:
             print("\nAnda tidak memiliki uang. Silahkan kerja dulu.")
-            self.main_menu()
+            self.menu_atm()
             return
 
         print("\n====================================")
@@ -351,7 +369,7 @@ class ATM:
         print("================================================")
         pilihan = input ("Silakan pilih (1/2): ")
         if pilihan == "1":
-            self.main_menu()
+            self.menu_atm()
         elif pilihan == "2":
             print("\nTransaksi Selesai. Terima kasih telah menggunakan layanan kami.")
     def setor_tunai(self):
@@ -398,7 +416,7 @@ class ATM:
 
         if jumlah_tagihan > self.kartu.saldo:
             print("\nSaldo tidak mencukupi untuk melakukan pembayaran.")
-            self.main_menu() 
+            self.menu_atm() 
         else:
             self.kartu.saldo -= jumlah_tagihan
             print(f"\nPembayaran tagihan {jenis_tagihan} sebesar Rp {jumlah_tagihan:,} berhasil!")
@@ -419,8 +437,18 @@ class ATM:
         selected = input("Pilih Nomor Kartu: ")
         self.flazz = list_flazz_obj[int(selected)-1]
 
+        pilihan = self.menu_kartu(self.flazz)
+
+        if pilihan == "1":
+            print("\nAnda memilih INFORMASI. Menampilkan informasi rekening...")
+            self.flazz.informasi()
+            self.menu_atm() 
+        elif pilihan == "2":
+            print("\nAnda memilih PENARIKAN TUNAI. Silakan pilih jumlah uang.")
+            self.top_up_flazz()
+            self.menu_atm()
+        
     def top_up_flazz(self):
-        self.list_flazz()
         print("\n====================================")
         print("         TOP UP SALDO FLAZZ        ")
         print("====================================")
@@ -431,7 +459,7 @@ class ATM:
         
         if jumlah_top_up.lower() == "cancel":
             print("\nTransaksi dibatalkan. Kembali ke menu utama.")
-            self.main_menu()
+            self.menu_atm()
             return
         
         if not jumlah_top_up.isdigit():
@@ -451,7 +479,7 @@ class ATM:
             print(f"\nTop-up Rp {jumlah_top_up:,} berhasil!")
             print(f"Sisa saldo Anda: Rp {self.kartu.saldo:,}")
             print(f"Sisa saldo Flazz: Rp {self.flazz.saldo:,}")
-            self.main_menu()
+            self.menu_atm()
 
 list_kartu_atm = [
     KartuATM("1234567890", "BCA",  2000000, "12/25" ,"123456", "PUnn_Doaa"),
