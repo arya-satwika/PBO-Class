@@ -5,12 +5,16 @@
 import tkinter as tk
 from tkinter import messagebox
 
+from abc import ABC, abstractmethod
 
 class Kartu:
     def __init__(self, nomorRekening, bank, saldo):
         self.nomorRekening = nomorRekening
         self.bank = bank
         self.saldo = int(saldo)
+    @abstractmethod
+    def informasi(self):
+        pass
     
 class KartuATM(Kartu):
     def __init__(self, nomorRekening, bank,  saldo, expired, pin, nama):
@@ -83,6 +87,7 @@ class KartuATM(Kartu):
             print("\nAnda tidak dapat melakukan transfer ke rekening Anda sendiri.")
             return
         jumlah = input("Masukkan jumlah uang: ")
+        
         if jumlah.isdigit():
             jumlah = int(jumlah)
 
@@ -90,8 +95,10 @@ class KartuATM(Kartu):
                 print("\nSaldo tidak mencukupi untuk transfer.")
                 return
             elif nomorRekening in self.database_rekening:
-                self.saldo -= jumlah  # Saldo pengirim berkurang
-                self.database_rekening[nomorRekening] += jumlah  # Saldo penerima bertambah
+                for scan in list_kartu_atm:
+                    if nomorRekening == scan.nomorRekening:
+                        scan.saldo+=jumlah
+                        self.saldo-=jumlah
                 print(f"\nTransfer Rp {jumlah:,} ke rekening {nomorRekening} berhasil!")
                 print(f"Sisa saldo Anda: Rp {self.saldo:,}")
             else:
@@ -102,8 +109,25 @@ class KartuATM(Kartu):
 class Flazz(Kartu):
     def __init__(self, nomorRekening, bank, saldo):
         super().__init__(nomorRekening, bank, saldo)
+    def informasi(self):
+        print("\n====================================")
+        print("         INFORMASI REKENING          ")
+        print("====================================")
+        print ("")
+        print("Untuk kembali ke menu utama, ketik 'BACK'")
+        print("No. Kartu: ", self.nomorRekening)
+        print("Bank: ", self.bank)
+        print("Saldo: Rp.",self.saldo)
+        print("")
+        print("====================================")
         
-
+        pilihan = input("Silakan ketik (BACK): ")
+        
+        if pilihan == "back" or pilihan == "BACK":
+            print("\nKembali ke menu utama.")
+        else:
+            print("\nMasukan tidak valid. Silakan coba lagi.")
+        
 class ATM:
     def __init__(self,bank, pecahan):
         self.bank = bank
@@ -111,15 +135,6 @@ class ATM:
         
 
     def tampilkan_kartu(self):
-        file = open("kartu.txt", "r")
-        list_kartu = []
-        dummyIndex = 0
-        for line in file: #scan file
-            datas = line.strip().split()#di pisah line nya per spasi
-
-            #bikin objek baru pake data di txt
-            kartu = KartuATM(datas[0], datas[1], int(datas[2]), datas[3], int(datas[4]), datas[5]) 
-            list_kartu.append(kartu)#masukkin objek kartu ke list
         print("==================================")
         print("         SELAMAT DATANG           ")
         print("       DI MESIN ATM INDONESIA     ")
@@ -217,7 +232,7 @@ class ATM:
             self.tampilkan_pesan()
         elif pilihan == "6":
             print("\nAnda memilih FLazz. Silakan pilih fitur kartu Flazz.")
-            self.kartu.flazz()
+            self.top_up_flazz()
             self.main_menu()
         elif pilihan == "7":
             print("\nAnda memilih SETOR TUNAI. Silakan masukkan uang ke mesin.")
@@ -381,31 +396,56 @@ class ATM:
             self.kartu.saldo -= jumlah_tagihan
             print(f"\nPembayaran tagihan {jenis_tagihan} sebesar Rp {jumlah_tagihan:,} berhasil!")
             print(f"Sisa saldo Anda: Rp {self.kartu.saldo:,}")
-            self.selesai_transaksi()  
-#objek atm
+            self.selesai_transaksi()
+    
+    def list_flazz(self):
+        print("\n====================================")
+        print("         Pilih FLAZZ                 ")
+        print("====================================")
+        print("Untuk membatalkan transaksi, ketik 'CANCEL'")
+        print("")
+        
+        dummyIndex = 1
+        for kartu in list_flazz_obj:
+            print(dummyIndex,". Nomor: ", kartu.nomorRekening, "Bank: ", kartu.bank, "Saldo: ", kartu.saldo)
+            dummyIndex = dummyIndex + 1
+        selected = input("Pilih Nomor Kartu: ")
+        self.flazz = list_flazz_obj[int(selected)-1]
 
-# class GUIatm(ATM):
-#     def __init__(self, atm):
-#         self.atm = atm
-#         self.window = tk.Tk()
-#         self.window.title("ATM Machine")
+    def top_up_flazz(self):
+        self.list_flazz()
+        print("\n====================================")
+        print("         TOP UP SALDO FLAZZ        ")
+        print("====================================")
+        print("Untuk membatalkan transaksi, ketik 'CANCEL'")
+        print("")
+        
+        jumlah_top_up = input("Masukkan jumlah top-up: ").strip()
+        
+        if jumlah_top_up.lower() == "cancel":
+            print("\nTransaksi dibatalkan. Kembali ke menu utama.")
+            self.main_menu()
+            return
+        
+        if not jumlah_top_up.isdigit():
+            print("\nMasukan tidak valid. Silakan coba lagi.")
+            self.top_up_flazz()
+            return
+        
+        jumlah_top_up = int(jumlah_top_up)
+        
+        if self.kartu.saldo < jumlah_top_up:
+            print("\nTop-up gagal! Saldo Anda tidak mencukupi, Silahkan Liat Saldo Anda Lagi.")
+            self.top_up_flazz()
+        else:
+            # self.kartu.top_up(jumlah_top_up)
+            self.kartu.saldo = self.kartu.saldo - jumlah_top_up
+            self.flazz.saldo = self.flazz.saldo + jumlah_top_up
+            print(f"\nTop-up Rp {jumlah_top_up:,} berhasil!")
+            print(f"Sisa saldo Anda: Rp {self.kartu.saldo:,}")
+            print(f"Sisa saldo Flazz: Rp {self.flazz.saldo:,}")
+            self.main_menu()
 
-#         self.label = tk.Label(self.window, text="Selamat Datang di ATM!")
-#         self.label.pack()
-
-#         self.pin_label = tk.Label(self.window, text="Masukkan PIN:")
-#         self.pin_label.pack()
-#         self.pin_entry = tk.Entry(self.window, show="*")
-#         self.pin_entry.pack()
-
-#         self.login_button = tk.Button(self.window, text="Login", command=self.login)
-#         self.login_button.pack()
-
-#         self.result_label = tk.Label(self.window, text="")
-#         self.result_label.pack()
-
-
-# kartu1 = KartuATM("1234567890", "BCA",  2000000, "12/25" ,"123456", "Jon Doaa")  
 list_kartu_atm = [
     KartuATM("1234567890", "BCA",  2000000, "12/25" ,"123456", "PUnn_Doaa"),
     KartuATM("1235645390", "BCA", 2000000, "12/25", "808080", "Jon_Doss"),
